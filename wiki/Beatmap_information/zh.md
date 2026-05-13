@@ -43,7 +43,7 @@
 - **收藏：** 将此谱面添加到用户个人资料的收藏谱面区域。
 - **下载：** 下载谱面。如果谱面包含背景视频，用户可选择下载带视频或不带视频的版本。
 - **osu!direct**：直接在游戏客户端内下载谱面，无需手动打开文件。玩家需要 [osu!supporter](/wiki/osu!supporter) 身份才能在 osu!(stable) 中使用此功能。
-- **举报：** 如果谱面处于[坟场](/wiki/Beatmap/Category#graveyard)或[制作中与待定](/wiki/Beatmap/Category#wip-and-pending)类别，且存在违规内容，用户可以[举报该谱面](/wiki/Reporting_bad_behaviour#beatmap)。点击三个点的图标会展开一个下拉菜单，其中包含`举报`按钮。
+- **举报：** 如果谱面处于[坟场](/wiki/Beatmap/Category#graveyard)或[制作中与待定](/wiki/Beatmap/Category#wip-and-pending)类别，且存在违规内容，用户可以[举报该谱面](/wiki/Reporting_bad_behaviour#谱面)。点击三个点的图标会展开一个下拉菜单，其中包含`举报`按钮。
 
 ### 统计面板
 
@@ -98,14 +98,14 @@
 
 除了与游戏玩法相关的统计数据外，每张谱面都包含元数据字段以提高谱面的可搜索性。作为[上架流程](/wiki/Beatmap_ranking_procedure)的一部分，在提交谱面之前，谱师需要将这些信息添加到谱面中：
 
-- [流派](/wiki/Beatmap/Genre_and_language#流派列表)：歌曲的主要音乐风格。
+- [流派](/wiki/Beatmap/Genre_and_language#歌曲风格列表)：歌曲的主要音乐风格。
 - [语言](/wiki/Beatmap/Genre_and_language#语言列表)：歌词的主要语言，若无歌词则为纯音乐。
-- [谱师标签](/wiki/Beatmap/Beatmap_tags#谱师标签)：包含歌曲信息的有用关键词。
+- [谱师标签](/wiki/Beatmap/Beatmap_tags#谱师标签-(mapper-tags))：包含歌曲信息的有用关键词。
 - **来源：** 歌曲最初创作所服务的媒介，或歌曲最为人所知的媒介。
 
 `提名者` 区域会在谱面被[谱面审核成员 (BN)](/wiki/People/Beatmap_Nominators) 提名时自动添加，作为[上架流程](/wiki/Beatmap_ranking_procedure)的一部分。
 
-谱面上架后，用户可以在 osu!(lazer) 客户端中为各个[玩家标签](/wiki/Beatmap/Beatmap_tags#玩家标签)投票。当某个玩家标签获得超过 5 票时，它将显示在 `玩家标签` 区域中。
+谱面上架后，用户可以在 osu!(lazer) 客户端中为各个[玩家标签](/wiki/Beatmap/Beatmap_tags#玩家标签-(user-tags))投票。当某个玩家标签获得超过 5 票时，它将显示在 `玩家标签` 区域中。
 
 如果谱面被添加到一个或多个[曲包](/wiki/Beatmap/Packs)中，这些曲包也会被列在 `所属曲包` 区域中。
 
