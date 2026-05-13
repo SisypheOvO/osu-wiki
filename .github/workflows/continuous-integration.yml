@@ -56,23 +56,28 @@ jobs:
           changed_files="$(mktemp)"
           git diff --diff-filter=d --name-only --no-renames -z master >"$changed_files"
           printf 'CHANGED_FILES=%s\n' "$changed_files" >>"$GITHUB_ENV"
+          if [ -s "$changed_files" ]; then
+            echo "has_changes=true" >>"$GITHUB_OUTPUT"
+          else
+            echo "has_changes=false" >>"$GITHUB_OUTPUT"
+          fi
 
       - name: check file sizes
-        if: ${{ !cancelled() && steps.detect-changed-files.outcome == 'success' }}
+        if: ${{ !cancelled() && steps.detect-changed-files.outcome == 'success' && steps.detect-changed-files.outputs.has_changes == 'true' }}
         run: xargs -0r meta/check-file-sizes.sh <"$CHANGED_FILES"
 
       - name: run remark on changed files
-        if: ${{ !cancelled() && steps.detect-changed-files.outcome == 'success' }}
+        if: ${{ !cancelled() && steps.detect-changed-files.outcome == 'success' && steps.detect-changed-files.outputs.has_changes == 'true' }}
         continue-on-error: ${{ contains(github.event.pull_request.body, 'SKIP_REMARK') }}
         run: |
           grep -z '\.md$' <"$CHANGED_FILES" | \
           REPORTER=vfile-reporter-github-action xargs -0r meta/remark.sh
 
       - name: run yamllint on .yaml and .md files
-        if: ${{ !cancelled() && steps.detect-changed-files.outcome == 'success' }}
+        if: ${{ !cancelled() && steps.detect-changed-files.outcome == 'success' && steps.detect-changed-files.outputs.has_changes == 'true' }}
         run: uv tool run osu-wiki-tools check-yaml --format github
 
       - name: find broken wikilinks
-        if: ${{ !cancelled() && steps.detect-changed-files.outcome == 'success' }}
+        if: ${{ !cancelled() && steps.detect-changed-files.outcome == 'success' && steps.detect-changed-files.outputs.has_changes == 'true' }}
         continue-on-error: ${{ contains(github.event.pull_request.body, 'SKIP_WIKILINK_CHECK') }}
         run: uv tool run osu-wiki-tools check-links --all --format github
