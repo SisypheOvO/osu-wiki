@@ -43,7 +43,7 @@ jobs:
 
           if [ "${{ github.event.pull_request.action }}" = "edited" ]; then
             old_body="${{ github.event.changes.body.from }}"
-            new_body="${{ github.event.changes.body }}"
+            new_body="${{ github.event.pull_request.body }}"
             old_has_flags=$(echo "$old_body" | grep -c 'SKIP_REMARK\|SKIP_WIKILINK_CHECK' || echo 0)
             new_has_flags=$(echo "$new_body" | grep -c 'SKIP_REMARK\|SKIP_WIKILINK_CHECK' || echo 0)
 
