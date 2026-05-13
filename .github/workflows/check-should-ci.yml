@@ -24,12 +24,10 @@ jobs:
       - name: detect changed files
         id: detect-changed-files
         run: |
-          changed_files="$(mktemp)"
-          git diff --diff-filter=d --name-only --no-renames -z master >"$changed_files"
-          if [ -s "$changed_files" ]; then
-            echo "has_changes=true" >>"$GITHUB_OUTPUT"
+          if ! git diff --quiet --diff-filter=d --no-renames master; then
+            echo "has_changes=true" >> "$GITHUB_OUTPUT"
           else
-            echo "has_changes=false" >>"$GITHUB_OUTPUT"
+            echo "has_changes=false" >> "$GITHUB_OUTPUT"
           fi
 
       - name: decide if should run checks
