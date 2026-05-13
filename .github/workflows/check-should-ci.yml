@@ -35,7 +35,11 @@ jobs:
         run: |
           should_run=false
 
-          if [ "${{ steps.detect-changed-files.outputs.has_changes }}" = "true" ]; then
+          if [ "${{ github.event.pull_request.action }}" = "opened" ] || [ "${{ github.event.pull_request.action }}" = "reopened" ]; then
+            should_run=true
+          fi
+
+          if [ "${{ github.event.pull_request.action }}" = "synchronize" ] && [ "${{ steps.detect-changed-files.outputs.has_changes }}" = "true" ]; then
             should_run=true
           fi
 
