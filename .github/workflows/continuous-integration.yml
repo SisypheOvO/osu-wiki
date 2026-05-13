@@ -62,22 +62,44 @@ jobs:
             echo "has_changes=false" >>"$GITHUB_OUTPUT"
           fi
 
+      - name: determine if should run checks
+        id: should-run
+        run: |
+          should_run=false
+
+          if [ "${{ steps.detect-changed-files.outputs.has_changes }}" = "true" ]; then
+            should_run=true
+          fi
+
+          if [ "${{ github.event.action }}" = "edited" ]; then
+            old_body="${{ github.event.changes.body.from }}"
+            new_body="${{ github.event.changes.body.to }}"
+            old_has_flags=$(echo "$old_body" | grep -c 'SKIP_REMARK\|SKIP_WIKILINK_CHECK' || echo 0)
+            new_has_flags=$(echo "$new_body" | grep -c 'SKIP_REMARK\|SKIP_WIKILINK_CHECK' || echo 0)
+
+            if [ "$old_has_flags" != "$new_has_flags" ]; then
+              should_run=true
+            fi
+          fi
+
+          echo "should_run=$should_run" >>"$GITHUB_OUTPUT"
+
       - name: check file sizes
-        if: ${{ !cancelled() && steps.detect-changed-files.outcome == 'success' && steps.detect-changed-files.outputs.has_changes == 'true' }}
+        if: ${{ !cancelled() && steps.should-run.outcome == 'success' && steps.should-run.outputs.should_run == 'true' }}
         run: xargs -0r meta/check-file-sizes.sh <"$CHANGED_FILES"
 
       - name: run remark on changed files
-        if: ${{ !cancelled() && steps.detect-changed-files.outcome == 'success' && steps.detect-changed-files.outputs.has_changes == 'true' }}
+        if: ${{ !cancelled() && steps.should-run.outcome == 'success' && steps.should-run.outputs.should_run == 'true' }}
         continue-on-error: ${{ contains(github.event.pull_request.body, 'SKIP_REMARK') }}
         run: |
           grep -z '\.md$' <"$CHANGED_FILES" | \
           REPORTER=vfile-reporter-github-action xargs -0r meta/remark.sh
 
       - name: run yamllint on .yaml and .md files
-        if: ${{ !cancelled() && steps.detect-changed-files.outcome == 'success' && steps.detect-changed-files.outputs.has_changes == 'true' }}
+        if: ${{ !cancelled() && steps.should-run.outcome == 'success' && steps.should-run.outputs.should_run == 'true' }}
         run: uv tool run osu-wiki-tools check-yaml --format github
 
       - name: find broken wikilinks
-        if: ${{ !cancelled() && steps.detect-changed-files.outcome == 'success' && steps.detect-changed-files.outputs.has_changes == 'true' }}
+        if: ${{ !cancelled() && steps.should-run.outcome == 'success' && steps.should-run.outputs.should_run == 'true' }}
         continue-on-error: ${{ contains(github.event.pull_request.body, 'SKIP_WIKILINK_CHECK') }}
         run: uv tool run osu-wiki-tools check-links --all --format github
