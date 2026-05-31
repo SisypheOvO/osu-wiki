@@ -72,7 +72,7 @@ jobs:
   ci:
     name: changed files
     needs: precondition
-    if: ${{ needs.precondition.outputs.should_run_checks == 'true'}}
+    if: ${{ needs.precondition.outputs.should_run_checks == 'true' }}
     runs-on: ubuntu-latest
     steps:
       # Clone the repo and only fetch the commit that triggered the workflow (omitted default of `fetch-depth: 1`).
